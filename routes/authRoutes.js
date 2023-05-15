@@ -13,6 +13,6 @@ router.post("/signup", signup);
 router.post("/login", login);
 
 // Add a middleware to protect admin routes
-router.get('/decode',decodeToken)
+router.use('/decode', protectRouteAdmin, decodeToken);
 
 module.exports = router;
