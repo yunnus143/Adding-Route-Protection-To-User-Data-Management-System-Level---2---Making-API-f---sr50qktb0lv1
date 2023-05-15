@@ -13,6 +13,20 @@ Possible Cases:
 
 function protectAdminRoutes(req, res, next) {
   // Write your code here
+   const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Authentication failed: Missing token.', status: "Error" });
+  }
+  try {
+    const decodedToken = jwt.verify(token, JWT_SECRET);
+    const { role } = decodedToken;
+    if (role !== 'admin' && role !== 'superadmin') {
+      return res.status(403).json({ message: 'Authorization failed: User is not an admin.', status: "Error" });
+    }
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: 'Authentication failed: Invalid token.', status: "Error" });
+  }
 }
 
 // Export the middleware function
